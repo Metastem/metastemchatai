@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Metastem Chat AI</title>
+  </head>
+  <body>
+    <div id="chat-container"></div>
+    <form>
+      <input type="text" id="input-text" placeholder="Enter your message here...">
+      <button type="button" id="submit-button" onclick="submitMessage()">Send</button>
+    </form>
+    <script>
+      // Replace YOUR_API_KEY with your actual API key
+      const apiKey = "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";
+      
+      function submitMessage() {
+        const inputText = document.getElementById("input-text").value;
+        const chatContainer = document.getElementById("chat-container");
+        chatContainer.innerHTML += `<p>You: ${inputText}</p>`;
+        
+        fetch(`https://api.openai.com/v1/engines/davinci/completions`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${apiKey}`
+          },
+          body: JSON.stringify({
+            prompt: inputText,
+            temperature: 0.5,
+            max_tokens: 128
+          })
+        })
+        .then(response => response.json())
+        .then(data => {
+          const responseText = data.choices[0].text;
+          chatContainer.innerHTML += `<p>Chatbot: ${responseText}</p>`;
+        });
+      }
+    </script>
+  </body>
+</html>
